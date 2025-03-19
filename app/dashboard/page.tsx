@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, Users, FileText, Bell, Clock, ChevronRight, Shield } from 'lucide-react'
+import { Calendar, Users, FileText, Bell, Clock, ChevronRight, Shield, MapPin } from 'lucide-react'
 import DashboardCard from '@/components/dashboard/DashboardCard'
 import NotificationItem from '@/components/dashboard/NotificationItem'
 
@@ -32,22 +32,23 @@ const upcomingEvents = [
   },
 ]
 
+// Updated to match the NotificationItem component's expected type
 const recentNotifications = [
   {
     id: 1,
-    type: 'info',
+    type: 'info' as const,
     message: 'Your application has moved to the review stage',
     timestamp: '2 days ago',
   },
   {
     id: 2,
-    type: 'success',
+    type: 'success' as const,
     message: 'Background check completed successfully',
     timestamp: '3 days ago',
   },
   {
     id: 3,
-    type: 'warning',
+    type: 'warning' as const,
     message: 'Please upload your insurance information',
     timestamp: '5 days ago',
   },
