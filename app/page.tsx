@@ -13,7 +13,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1568605114967-8130f3a36994"
-            
+            alt=" "
             fill
             className="object-cover brightness-50"
             priority
