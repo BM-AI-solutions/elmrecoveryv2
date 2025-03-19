@@ -8,11 +8,11 @@
 [build.environment]
   NEXT_PUBLIC_SITE_URL = "https://elmrecovery.netlify.app"
   
-# Redirects and headers
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Remove the redirects section as it conflicts with Next.js routing
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
   
 [[headers]]
   for = "/*"
