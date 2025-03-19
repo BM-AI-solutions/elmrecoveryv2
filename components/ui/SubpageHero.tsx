@@ -19,9 +19,9 @@ export default function SubpageHero({ title, description, imageSrc }: SubpageHer
         />
       </div>
       <div className="relative z-10 container-custom py-20 md:py-24">
-        <div className="max-w-3xl text-white">
+        <div className="max-w-3xl text-black">
           <h1 className="mb-4">{title}</h1>
-          <p className="text-lg text-gray-100">
+          <p className="text-lg text-black">
             {description}
           </p>
         </div>
