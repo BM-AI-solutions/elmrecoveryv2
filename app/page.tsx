@@ -24,8 +24,8 @@ export default function Home() {
             <span className="inline-block px-3 py-1 mb-4 text-xs font-medium tracking-wider text-white uppercase bg-primary-600 rounded-full">
               San Diego's Premier Recovery Housing
             </span>
-            <h1 className="mb-6">Begin Your Recovery Journey in a Supportive Community</h1>
-            <p className="mb-8 text-lg text-gray-100">
+            <h1 className="mb-6 text-primary-800">Begin Your Recovery Journey in a Supportive Community</h1>
+            <p className="mb-8 text-lg text-primary-800">
               Elm Recovery provides safe, structured, and supportive housing for individuals on their path to sobriety. Our homes in San Diego offer the perfect environment to heal, grow, and thrive.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
