@@ -21,6 +21,18 @@ const registerSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
 })
 
+// Define error response types
+export type AuthError = {
+  form?: string;
+  fieldErrors?: Record<string, string[]>;
+}
+
+export type AuthResult = {
+  error?: AuthError;
+  success?: boolean;
+  email?: string;
+}
+
 // Create a Supabase client for server components
 const getSupabase = () => {
   const cookieStore = cookies()
@@ -44,14 +56,14 @@ const getSupabase = () => {
   )
 }
 
-export async function signIn(formData: FormData) {
+export async function signIn(formData: FormData): Promise<AuthResult> {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   
   // Validate form data
   const result = loginSchema.safeParse({ email, password })
   if (!result.success) {
-    return { error: result.error.flatten().fieldErrors }
+    return { error: { fieldErrors: result.error.flatten().fieldErrors } }
   }
   
   const supabase = getSupabase()
@@ -68,7 +80,7 @@ export async function signIn(formData: FormData) {
   redirect('/dashboard')
 }
 
-export async function signUp(formData: FormData) {
+export async function signUp(formData: FormData): Promise<AuthResult> {
   const fullName = formData.get('fullName') as string
   const email = formData.get('email') as string
   const phone = formData.get('phone') as string
@@ -85,7 +97,7 @@ export async function signUp(formData: FormData) {
   })
   
   if (!result.success) {
-    return { error: result.error.flatten().fieldErrors }
+    return { error: { fieldErrors: result.error.flatten().fieldErrors } }
   }
   
   const supabase = getSupabase()
@@ -115,7 +127,7 @@ export async function signOut() {
   redirect('/')
 }
 
-export async function resetPassword(formData: FormData) {
+export async function resetPassword(formData: FormData): Promise<AuthResult> {
   const email = formData.get('email') as string
   
   const supabase = getSupabase()

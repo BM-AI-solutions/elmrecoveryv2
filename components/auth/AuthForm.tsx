@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Leaf, Mail, Lock, User, AlertCircle, ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from 'react-hot-toast'
-import { signIn, signUp, resetPassword } from '@/lib/auth/auth-actions'
+import { signIn, signUp, resetPassword, AuthResult } from '@/lib/auth/auth-actions'
 
 type AuthFormType = 'login' | 'register' | 'reset-password'
 
@@ -74,21 +74,15 @@ export default function AuthForm({ type }: AuthFormProps) {
     setFormError(null)
     
     try {
+      let result: AuthResult | undefined;
+      
       if (type === 'login') {
         const loginData = data as LoginFormData;
         const formData = new FormData()
         formData.append('email', loginData.email)
         formData.append('password', loginData.password)
         
-        const result = await signIn(formData)
-        
-        if (result?.error) {
-          if (result.error.form) {
-            setFormError(result.error.form)
-          } else {
-            toast.error('Invalid email or password')
-          }
-        }
+        result = await signIn(formData)
       } else if (type === 'register') {
         const registerData = data as RegisterFormData;
         const formData = new FormData()
@@ -98,15 +92,9 @@ export default function AuthForm({ type }: AuthFormProps) {
         formData.append('recoveryJourney', registerData.recoveryJourney || '')
         formData.append('password', registerData.password)
         
-        const result = await signUp(formData)
+        result = await signUp(formData)
         
-        if (result?.error) {
-          if (result.error.form) {
-            setFormError(result.error.form)
-          } else {
-            toast.error('Registration failed. Please try again.')
-          }
-        } else if (result?.success) {
+        if (result?.success) {
           toast.success('Account created! Please check your email to verify your account.')
           router.push('/login')
         }
@@ -115,13 +103,19 @@ export default function AuthForm({ type }: AuthFormProps) {
         const formData = new FormData()
         formData.append('email', resetData.email)
         
-        const result = await resetPassword(formData)
+        result = await resetPassword(formData)
         
-        if (result?.error) {
-          setFormError(result.error.form)
-        } else if (result?.success) {
+        if (result?.success) {
           toast.success('Password reset email sent. Please check your inbox.')
           router.push('/login')
+        }
+      }
+      
+      if (result?.error) {
+        if (result.error.form) {
+          setFormError(result.error.form)
+        } else {
+          toast.error(type === 'login' ? 'Invalid email or password' : 'An error occurred. Please try again.')
         }
       }
     } catch (error) {
