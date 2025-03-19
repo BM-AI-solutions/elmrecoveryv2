@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Leaf, User, ChevronDown } from 'lucide-react'
+import { Menu, X, User, ChevronDown } from 'lucide-react'
 import { Transition } from '@headlessui/react'
 import clsx from 'clsx'
+import { ElmLogo, ElmLogoIcon } from '../ui/ElmLogo'
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -27,8 +28,8 @@ export default function Header() {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Leaf className="h-8 w-8 text-primary-600" />
-            <span className="ml-2 text-xl font-heading font-bold text-gray-900">Elm Recovery</span>
+            <ElmLogoIcon className="h-10 w-auto md:hidden" />
+            <ElmLogo className="hidden md:block h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
