@@ -3,9 +3,18 @@
 import { useState } from 'react'
 import { FilterIcon, X } from 'lucide-react'
 
+// Define the type for the filters state
+interface FiltersState {
+  gender: string;
+  minBeds: string;
+  maxPrice: string;
+  neighborhood: string[];
+  amenities: string[];
+}
+
 export default function PropertyFilters() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<FiltersState>({
     gender: '',
     minBeds: '',
     maxPrice: '',

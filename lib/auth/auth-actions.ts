@@ -3,7 +3,7 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { z } from 'zod'
 
 // Schema for login validation
@@ -37,23 +37,9 @@ export type AuthResult = {
 const getSupabase = () => {
   const cookieStore = cookies()
   
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-        set(name: string, value: string, options: any) {
-          cookieStore.set({ name, value, ...options })
-        },
-        remove(name: string, options: any) {
-          cookieStore.set({ name, value: '', ...options })
-        },
-      },
-    }
-  )
+  return createServerComponentClient({
+    cookies: () => cookieStore
+  })
 }
 
 export async function signIn(formData: FormData): Promise<AuthResult> {

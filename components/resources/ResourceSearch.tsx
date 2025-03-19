@@ -3,10 +3,17 @@
 import { useState } from 'react'
 import { Search, Filter } from 'lucide-react'
 
+// Define interface for the filters state
+interface ResourceFilters {
+  categories: string[];
+  types: string[];
+  tags: string[];
+}
+
 export default function ResourceSearch() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<ResourceFilters>({
     categories: [],
     types: [],
     tags: [],
@@ -39,7 +46,7 @@ export default function ResourceSearch() {
     console.log('Searching for:', searchQuery, 'with filters:', filters)
   }
   
-  const toggleFilter = (type: 'categories' | 'types' | 'tags', value: string) => {
+  const toggleFilter = (type: keyof ResourceFilters, value: string) => {
     setFilters(prev => {
       const current = prev[type]
       const updated = current.includes(value)
