@@ -1,1 +1,13 @@
-{}
+{
+  "/_not-found": "app/_not-found.js",
+  "/housing/[id]/page": "app/housing/[id]/page.js",
+  "/page": "app/page.js",
+  "/resources/[category]/page": "app/resources/[category]/page.js",
+  "/about/page": "app/about/page.js",
+  "/housing/page": "app/housing/page.js",
+  "/login/page": "app/login/page.js",
+  "/register/page": "app/register/page.js",
+  "/reset-password/page": "app/reset-password/page.js",
+  "/resources/page": "app/resources/page.js",
+  "/dashboard/page": "app/dashboard/page.js"
+}
