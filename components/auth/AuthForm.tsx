@@ -41,6 +41,14 @@ const resetPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
 })
 
+// Define union type for all possible form data types
+type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
+type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+
+// Combined type for all form data
+type FormData = LoginFormData | RegisterFormData | ResetPasswordFormData;
+
 export default function AuthForm({ type }: AuthFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -52,8 +60,6 @@ export default function AuthForm({ type }: AuthFormProps) {
     type === 'login' ? loginSchema :
     type === 'register' ? registerSchema :
     resetPasswordSchema
-  
-  type FormData = z.infer<typeof formSchema>
   
   const { 
     register, 
@@ -69,9 +75,10 @@ export default function AuthForm({ type }: AuthFormProps) {
     
     try {
       if (type === 'login') {
+        const loginData = data as LoginFormData;
         const formData = new FormData()
-        formData.append('email', data.email)
-        formData.append('password', data.password)
+        formData.append('email', loginData.email)
+        formData.append('password', loginData.password)
         
         const result = await signIn(formData)
         
@@ -83,12 +90,13 @@ export default function AuthForm({ type }: AuthFormProps) {
           }
         }
       } else if (type === 'register') {
+        const registerData = data as RegisterFormData;
         const formData = new FormData()
-        formData.append('fullName', (data as any).fullName)
-        formData.append('email', data.email)
-        formData.append('phone', (data as any).phone)
-        formData.append('recoveryJourney', (data as any).recoveryJourney || '')
-        formData.append('password', data.password)
+        formData.append('fullName', registerData.fullName)
+        formData.append('email', registerData.email)
+        formData.append('phone', registerData.phone)
+        formData.append('recoveryJourney', registerData.recoveryJourney || '')
+        formData.append('password', registerData.password)
         
         const result = await signUp(formData)
         
@@ -103,8 +111,9 @@ export default function AuthForm({ type }: AuthFormProps) {
           router.push('/login')
         }
       } else if (type === 'reset-password') {
+        const resetData = data as ResetPasswordFormData;
         const formData = new FormData()
-        formData.append('email', data.email)
+        formData.append('email', resetData.email)
         
         const result = await resetPassword(formData)
         
@@ -187,8 +196,50 @@ export default function AuthForm({ type }: AuthFormProps) {
                 )}
               </div>
               
-              {/* Other register fields... */}
-              {/* Rest of the form remains the same */}
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                  Phone Number
+                </label>
+                <div className="mt-1 relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    id="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    className={`block w-full rounded-md border-gray-300 pl-10 focus:border-primary-500 focus:ring-primary-500 ${errors.phone ? 'border-red-500' : ''}`}
+                    {...register('phone')}
+                  />
+                </div>
+                {errors.phone && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.phone.message}
+                  </p>
+                )}
+              </div>
+              
+              <div>
+                <label htmlFor="recoveryJourney" className="block text-sm font-medium text-gray-700">
+                  Your Recovery Journey (Optional)
+                </label>
+                <div className="mt-1">
+                  <textarea
+                    id="recoveryJourney"
+                    rows={3}
+                    className={`block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500 ${errors.recoveryJourney ? 'border-red-500' : ''}`}
+                    placeholder="Tell us a bit about your journey and what you're looking for..."
+                    {...register('recoveryJourney')}
+                  />
+                </div>
+                {errors.recoveryJourney && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.recoveryJourney.message}
+                  </p>
+                )}
+              </div>
             </>
           )}
           
@@ -217,7 +268,102 @@ export default function AuthForm({ type }: AuthFormProps) {
             )}
           </div>
           
-          {/* Rest of the form remains the same */}
+          {/* Password field (login and register) */}
+          {(type === 'login' || type === 'register') && (
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  type="password"
+                  autoComplete={type === 'login' ? 'current-password' : 'new-password'}
+                  className={`block w-full rounded-md border-gray-300 pl-10 focus:border-primary-500 focus:ring-primary-500 ${errors.password ? 'border-red-500' : ''}`}
+                  {...register('password')}
+                />
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+          )}
+          
+          {/* Confirm Password (register only) */}
+          {type === 'register' && (
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  autoComplete="new-password"
+                  className={`block w-full rounded-md border-gray-300 pl-10 focus:border-primary-500 focus:ring-primary-500 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+                  {...register('confirmPassword')}
+                />
+              </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+          )}
+          
+          {/* Terms acceptance (register only) */}
+          {type === 'register' && (
+            <div className="flex items-start">
+              <div className="flex items-center h-5">
+                <input
+                  id="termsAccepted"
+                  type="checkbox"
+                  className={`h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded ${errors.termsAccepted ? 'border-red-500' : ''}`}
+                  {...register('termsAccepted')}
+                />
+              </div>
+              <div className="ml-3 text-sm">
+                <label htmlFor="termsAccepted" className="font-medium text-gray-700">
+                  I agree to the{' '}
+                  <Link href="/terms" className="text-primary-600 hover:text-primary-500">
+                    Terms of Service
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy" className="text-primary-600 hover:text-primary-500">
+                    Privacy Policy
+                  </Link>
+                </label>
+                {errors.termsAccepted && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    {errors.termsAccepted.message}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {/* Forgot password link (login only) */}
+          {type === 'login' && (
+            <div className="flex items-center justify-end">
+              <div className="text-sm">
+                <Link href="/reset-password" className="text-primary-600 hover:text-primary-500 font-medium">
+                  Forgot your password?
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
         
         <div>
