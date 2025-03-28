@@ -6,20 +6,34 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  /* Consider adding CSS variables for primary/secondary colors if needed */
 }
 
 @layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply font-sans antialiased text-secondaryGray-800; /* Use secondaryGray for base text */
+  }
   h1 {
-    @apply font-montserrat text-4xl md:text-5xl font-bold text-white;
+    @apply font-montserrat text-4xl md:text-5xl font-bold text-white; /* Keep for hero */
   }
   h2 {
-    @apply font-montserrat text-3xl md:text-4xl font-bold text-gray-900;
+    /* Adjusted default h2 color */
+    @apply font-montserrat text-3xl md:text-4xl font-bold text-secondaryGray-900; 
   }
   h3 {
-    @apply font-montserrat text-xl md:text-2xl font-semibold text-gray-900;
+    /* Adjusted default h3 color */
+    @apply font-montserrat text-xl md:text-2xl font-semibold text-secondaryGray-800; 
   }
   h4 {
-    @apply font-montserrat text-lg md:text-xl font-semibold text-gray-900;
+    /* Adjusted default h4 color */
+    @apply font-montserrat text-lg md:text-xl font-semibold text-secondaryGray-800; 
+  }
+  /* Add focus-visible styles globally */
+  *:focus-visible {
+      @apply outline-none ring-2 ring-offset-2 ring-primary-500 rounded-md;
   }
 }
 
@@ -29,18 +43,32 @@
   }
   
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm transition-colors duration-200;
+    /* Base button styles */
+    @apply inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700;
+    /* Primary button styles */
+    @apply bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800;
   }
   
   .btn-secondary {
-    @apply bg-white text-primary-600 border-primary-600 hover:bg-gray-50;
+    /* Secondary button styles - adjusted for better contrast/visuals */
+    @apply bg-white text-primary-700 border-secondaryGray-300 hover:bg-secondaryGray-50 active:bg-secondaryGray-100 focus:ring-primary-500;
+  }
+
+  .btn-secondary-dark {
+     /* Example for dark backgrounds */
+     @apply bg-secondaryGray-800 text-white border-secondaryGray-600 hover:bg-secondaryGray-700 active:bg-secondaryGray-600 focus:ring-primary-400;
   }
   
   .input-field {
-    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500;
+    /* Input field styles */
+    @apply block w-full rounded-md border-secondaryGray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm disabled:opacity-50 disabled:bg-secondaryGray-50;
+  }
+
+  /* Add other reusable component styles here */
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-secondaryGray-200 overflow-hidden;
   }
 }
